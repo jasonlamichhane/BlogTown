@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block content %}
+    <form method="GET" action="">
+        <div class="input-group mb-3">
+          <div class="input-group mb-3">
+              <input type="text" name="keyword" id="keyword" class="form-control" placeholder="Search keywords" aria-label="Search keywords" aria-describedby="button-addon2">
+              <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+            </div>
+        </div>
+    </form>
+
+    {% for post in posts %}
+        <article class="media content-section">
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ post.author.username }}</a>
+              <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
+            {% if post.content_type == 'plain' %}
+            <p class="article-content">{{ post.content | safe | striptags | truncate(400) }}</p>
+            {% elif post.content_type == 'html' %}
+            <p class="article-content">{{ post.content | safe | striptags | truncate(400) }}</p>
+            {% elif post.content_type == 'markdown' %}
+            <p class="article-content">{{ post.content | markdown | striptags | truncate(400) }}</p>
+            {% endif  %}
+            <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.image_file) }}">
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
