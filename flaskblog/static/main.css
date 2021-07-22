@@ -78,3 +78,26 @@ a.article-title:hover {
 .account-heading {
   font-size: 2.5rem;
 }
+
+.homearticle-img{
+  /* float: right; */
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+  border: 4px soild white;
+  border-radius: 8px;
+  display: block;  
+}
+
+.postarticle-img{
+  
+  height:auto;
+  max-width: 100%;
+  margin-right: 20px;
+  margin-bottom: 16px;
+  border: 4px soild white;
+  border-radius: 8px;
+  display: block;
+}
+

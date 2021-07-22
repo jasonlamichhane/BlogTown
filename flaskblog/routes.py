@@ -4,13 +4,15 @@ from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from flaskblog import app, db, bcrypt
 from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm, CommentForm
-from flaskblog.models import User, Post, Comment
-from flask_login import login_user, current_user, logout_user, login_required
+from flaskblog.models import User, Post, Comment, Category, Postlike
+from flask_login import login_user, current_user, logout_user, login_required, UserMixin
 
 
 @app.route("/")
 @app.route("/home")
 def home():
+    categories = Category.query.all()
+    has_liked = Postlike.query.all()
     if 'keyword' in request.args:
         keyword = request.args['keyword']
         # search the posts using the keyword
@@ -19,7 +21,7 @@ def home():
     else:
         posts = Post.query.order_by(Post.date_posted.desc()).all()
         app.logger.debug(f'index without searching returned {len(posts)} posts')
-    return render_template('home.html', posts=posts)
+    return render_template('home.html', posts=posts, categories=categories, has_liked=has_liked)
 
 
 @app.route("/about")
@@ -142,11 +144,13 @@ def new_post():
     form = PostForm()
     if form.validate_on_submit():
         if form.validate_on_submit():
+            category = Category.query.filter_by(title=form.category.data).first()
             if form.picture.data:
                 picture_file = save_raw_picture(form.picture.data)
             created_post = Post(title=form.title.data,
                                 content_type=form.content_type.data,
                                 content=form.content.data,
+                                category_id=category.id,
                                 image_file=picture_file,
                                 author=current_user)
             db.session.add(created_post)
@@ -239,3 +243,16 @@ def delete_post(post_id):
         app.logger.critical(f'Error while deleting the post: {post_to_delete}')
         app.logger.exception(e)
         flash('There was an error while deleting your post. Try again later!', 'danger')
+
+@app.route('/like/<int:post_id>/<action>')
+@login_required
+def like_action(post_id, action):
+    post = Post.query.filter_by(id=post_id).first_or_404()
+    a = post.likes
+    if action == 'like':
+        post.likes = a + 1
+        db.session.commit()
+    if action == 'unlike':
+        post.likes = a - 1
+        db.session.commit()
+    return redirect(request.referrer)

@@ -17,8 +17,6 @@
               <a class="mr-2" href="#">{{ post.author.username }}</a>
               <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
             </div>
-            
-            <img class="rounded float-right homearticle-img" src="{{ url_for('static', filename='profile_pics/' + post.image_file) }}">
             <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
             {% if post.content_type == 'plain' %}
             <p class="article-content">{{ post.content | safe | striptags | truncate(400) }}</p>
@@ -27,15 +25,7 @@
             {% elif post.content_type == 'markdown' %}
             <p class="article-content">{{ post.content | markdown | striptags | truncate(400) }}</p>
             {% endif  %}
-            
-            
-            {% if post.like == 100 %}
-            <a href="{{ url_for('like_action', post_id=post.id, action='unlike') }}">Unlike</a>
-            {% else %}
-            <a href="{{ url_for('like_action', post_id=post.id, action='like') }}">Like</a>
-            {% endif %}
-            {{ post.likes }} likes
-            
+            <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.image_file) }}">
           </div>
         </article>
     {% endfor %}

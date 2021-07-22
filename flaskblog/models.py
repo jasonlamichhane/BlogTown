@@ -30,10 +30,14 @@ class Post(db.Model):
     content = db.Column(db.Text, nullable=False)
     content_type = db.Column(db.String(20), nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    likes = db.Column(db.Integer)
+
+
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     author = db.relationship(User, backref=db.backref('posts', lazy=True))
-
+    
     def __repr__(self):
         return f"<Post(id='{self.id}', user_id='{self.user_id}', title='{self.title}', date_posted='{self.date_posted}')>"
 
@@ -66,3 +70,20 @@ class Token(db.Model):
     token = db.Column(db.String(60), nullable=False, index=True, unique=True)  # index helps speeding up the searching
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship(User, backref=db.backref('tokens', lazy=True))
+
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(50))
+
+    def __repr__(self):
+        return f"<Category(id='{self.id}, title='{self.title}'>"
+
+
+class Postlike(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
+    post_id = db.Column(db.Integer)
+
+    def __repr__(self):
+        return f"<Postlike(user_id='{self.user_id}', post_id='{self.post_id}')>"

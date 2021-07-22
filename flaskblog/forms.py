@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, RadioField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, RadioField, SelectField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from flaskblog.models import User
@@ -66,6 +66,7 @@ class PostForm(FlaskForm):
     content_type = RadioField('Content type', validators=[DataRequired()],
                               choices=[('plain', 'Plain Text'), ('html', 'HTML'), ('markdown', 'Markdown')])
     content = TextAreaField('Content', validators=[DataRequired()])
+    category = SelectField('Category', choices =['tech','music','movies'], validators = [DataRequired()])
     picture = FileField('Post Picture', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Post')
 

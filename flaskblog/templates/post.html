@@ -13,6 +13,7 @@
           </div>
         {% endif %}
       </div>
+      <img class="postarticle-img" src="{{ url_for('static', filename='profile_pics/' + post.image_file) }}">
       <h2 class="article-title">{{ post.title }}</h2>
       {% if post.content_type == 'plain' %}
       <p class="article-content">{{ post.content }}</p>
@@ -21,7 +22,7 @@
       {% elif post.content_type == 'markdown' %}
       <p class="article-content">{{ post.content | markdown }}</p>
       {% endif  %}
-      <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.image_file) }}">
+      
     </div>
   </article>
   <div class="content-section">
